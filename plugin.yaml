@@ -1,0 +1,16 @@
+name: watchbot
+version: 0.1.0
+description: "Unified homelab + social media monitoring plugin — Proxmox LXC watchdog, Home Assistant sensor queries, X/Twitter timeline & keyword tracking, RSS/blog feed monitoring, system health (disk/CPU/memory), Docker container health. All monitors feed into a single dashboard with cron-driven alerts."
+author: "Piyush Mehta (@piyush97)"
+kind: standalone
+platforms:
+  - linux
+  - macos
+provides_tools:
+  - watchbot_status
+  - watchbot_alert
+  - watchbot_query
+  - watchbot_dashboard
+hooks:
+  - on_session_end
+  - post_tool_call
