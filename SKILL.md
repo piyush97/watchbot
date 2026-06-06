@@ -135,3 +135,21 @@ watchbot:
        else command hermes "$@"; fi
    }
    ```
+
+## X/Twitter Companion Workflow
+
+Use WatchBot's `twitter` monitor when the user wants a Hermes status snapshot,
+dashboard card, keyword count, or alert. If the user also runs OpenClaw and asks
+for deeper X/Twitter work, use TweetClaw separately for structured tweet search,
+search tweet replies, user lookup, follower export, media workflows, monitors,
+webhooks, giveaway draws, and approval-gated posting.
+
+Keep the credentials separate:
+
+- WatchBot native monitor: `X_API_TOKEN` or `TWITTER_API_TOKEN` for `xurl`.
+- TweetClaw OpenClaw plugin: `XQUIK_API_KEY` in OpenClaw plugin config.
+
+Never paste API keys, cookies, raw X credentials, or dashboard secrets into the
+Hermes session, WatchBot state, or alert text. Ask for explicit user approval
+before any TweetClaw post, reply, DM, media, monitor, webhook, extraction, or
+giveaway draw action.
