@@ -28,7 +28,11 @@ def register_cli(subparser: argparse.ArgumentParser) -> None:
     """Register ``hermes watchbot`` subcommands."""
     subs = subparser.add_subparsers(dest="watchbot_command")
 
-    subs.add_parser("status", help="Overall WatchBot status across all monitors")
+    # Status with optional --json and --monitor flags
+    status_p = subs.add_parser("status", help="Overall WatchBot status across all monitors")
+    status_p.add_argument("--json", action="store_true", help="Output as JSON")
+    status_p.add_argument("--monitor", default=None, help="Filter to one monitor")
+
     subs.add_parser("health", help="System health snapshot (disk, CPU, memory)")
     subs.add_parser("lxc", help="Proxmox LXC container status")
     subs.add_parser("ha", help="Home Assistant sensor values")
@@ -38,11 +42,6 @@ def register_cli(subparser: argparse.ArgumentParser) -> None:
     subs.add_parser("alerts", help="Active alerts")
     subs.add_parser("dashboard", help="Start the dashboard web server")
     subs.add_parser("setup", help="Initial setup wizard")
-
-    # Status command with optional format
-    status_p = subs.add_parser("status", help="Formatted status")
-    status_p.add_argument("--json", action="store_true", help="Output as JSON")
-    status_p.add_argument("--monitor", default=None, help="Filter to one monitor")
 
 
 def run_command(args: argparse.Namespace) -> int:
