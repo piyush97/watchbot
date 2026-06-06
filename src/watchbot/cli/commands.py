@@ -26,6 +26,10 @@ logger = logging.getLogger(__name__)
 
 def register_cli(subparser: argparse.ArgumentParser) -> None:
     """Register ``hermes watchbot`` subcommands."""
+    subparser.add_argument(
+        "--version", action="store_true",
+        help="Show version and exit",
+    )
     subs = subparser.add_subparsers(dest="watchbot_command")
 
     # Status with optional --json and --monitor flags
@@ -49,7 +53,14 @@ def run_command(args: argparse.Namespace) -> int:
     cfg = load_config()
     cmd = getattr(args, "watchbot_command", None) or "status"
 
-    if cmd == "status":
+    # Handle --version flag
+    if getattr(args, "version", False):
+        from watchbot import __version__
+        print(f"watchbot v{__version__}")
+        return 0
+
+    # Default to status if no subcommand given
+    if not cmd or cmd == "status":
         data = get_dashboard_data(cfg)
         if getattr(args, "json", False) or "JSON" in os.environ.get("WATCHBOT_OUTPUT", ""):
             print(json.dumps(data, indent=2, default=str))

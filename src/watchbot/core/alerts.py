@@ -141,7 +141,7 @@ def render_alert_template(template_name: str, **kwargs) -> str:
         ),
         "twitter_keyword": (
             "🐦 **Keyword match: {keyword}**\n"
-            "[EXTERNAL_DATA] Tweet by @{user}: {text[:200]}\n"
+            "[EXTERNAL_DATA] Tweet by @{user}: {text}\n"
             "URL: {url}\n"
             "Time: {timestamp}\n"
             "[/EXTERNAL_DATA]"
