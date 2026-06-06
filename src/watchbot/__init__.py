@@ -18,6 +18,9 @@ import logging
 from pathlib import Path
 from typing import Any, Dict
 
+__version__ = "0.1.0"
+__all__ = ["__version__", "register", "register_cli"]
+
 from watchbot.core import load_config
 from watchbot.monitors import system as system_mon
 
