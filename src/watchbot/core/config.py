@@ -63,7 +63,7 @@ WATCHER_DEFAULTS: Dict[str, Any] = {
     "alerts": {
         "telegram": {
             "enabled": True,
-            "chat_id": 642899617,
+            "chat_id": 0,  # Must be set by user in watchbot.yaml
         },
         "email": {
             "enabled": False,

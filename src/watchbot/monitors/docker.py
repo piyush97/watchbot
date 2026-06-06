@@ -6,6 +6,7 @@ import http.client
 import json
 import logging
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlencode
 
@@ -115,6 +116,16 @@ def get_docker_summary(cfg: Optional[Dict] = None) -> Dict[str, Any]:
 
     if not config.get("enabled", True):
         return {"enabled": False, "message": "Docker monitoring disabled"}
+
+    # Safety: validate socket path is an absolute path under allowed dirs
+    resolved_socket = Path(socket_path).resolve()
+    allowed_socket_dirs = (
+        Path("/var/run"),
+        Path("/run"),
+    )
+    if not any(str(resolved_socket).startswith(str(p)) for p in allowed_socket_dirs):
+        logger.warning("Docker socket path outside allowed dirs: %s", socket_path)
+        return {"enabled": False, "error": f"Invalid socket path: {socket_path}"}
 
     containers = list_containers(socket_path)
     stats = get_container_stats(socket_path)

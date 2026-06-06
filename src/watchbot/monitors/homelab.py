@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 import re
+import shlex
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,22 +18,57 @@ logger = logging.getLogger(__name__)
 
 MONITOR_NAME = "homelab"
 
+# — SAFETY GUARD: Validate SSH config values to prevent injection ———
 
-def _ssh_cmd(host: str, user: str, port: int, key_path: str, cmd: str) -> str:
-    """Build an SSH command string."""
-    return (
-        f"ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no "
-        f"-i {key_path} -p {port} {user}@{host} {cmd}"
+
+def _validate_ssh_config(host: str, user: str, port: int, key_path: str) -> None:
+    """Validate SSH config values, raising ValueError on suspicious input.
+
+    Guards against command injection via compromised config.yaml.
+    """
+    # Host must be IP or known domain — reject shell metacharacters
+    if not re.match(r'^[a-zA-Z0-9._-]+$', host):
+        raise ValueError(f"Invalid SSH host: {host!r}")
+    # User must be alphanumeric
+    if not re.match(r'^[a-zA-Z0-9._-]+$', user):
+        raise ValueError(f"Invalid SSH user: {user!r}")
+    # Port must be 1-65535
+    if not (1 <= int(port) <= 65535):
+        raise ValueError(f"Invalid SSH port: {port}")
+    # Key path must be an absolute path under home or /etc/ssh
+    resolved = Path(key_path).expanduser().resolve()
+    allowed_prefixes = (
+        Path.home() / ".ssh",
+        Path("/etc/ssh"),
+        Path("/etc/ssl"),
     )
+    if not any(str(resolved).startswith(str(p)) for p in allowed_prefixes):
+        raise ValueError(f"SSH key path outside allowed directories: {key_path}")
 
 
 def _run_ssh(host: str, user: str, port: int, key_path: str, cmd: str,
              timeout: int = 15) -> Tuple[bool, str]:
-    """Run a command via SSH and return (success, output)."""
-    full_cmd = _ssh_cmd(host, user, port, key_path, cmd)
+    """Run a command via SSH using an argument list (no shell=True).
+
+    Returns (success, output).
+    """
+    _validate_ssh_config(host, user, port, key_path)
+    expanded_key = str(Path(key_path).expanduser())
+
+    # Build argv — no shell=True, no string interpolation risk
+    argv = [
+        "ssh",
+        "-o", "ConnectTimeout=10",
+        "-o", "StrictHostKeyChecking=no",
+        "-o", "BatchMode=yes",
+        "-i", expanded_key,
+        "-p", str(port),
+        f"{user}@{host}",
+        cmd,  # single command string — passed as one arg to ssh
+    ]
     try:
         result = subprocess.run(
-            full_cmd, shell=True, capture_output=True, text=True,
+            argv, shell=False, capture_output=True, text=True,
             timeout=timeout
         )
         if result.returncode == 0:
@@ -58,7 +93,12 @@ def check_lxc(cfg: Optional[Dict] = None) -> List[Dict]:
     critical_ids = set(config.get("critical", []))
     optional_ids = set(config.get("optional", []))
 
-    success, output = _run_ssh(host, user, port, key_path, "pct list")
+    try:
+        success, output = _run_ssh(host, user, port, key_path, "pct list")
+    except ValueError as e:
+        logger.warning("Invalid SSH config: %s", e)
+        return []
+
     if not success:
         logger.warning("Failed to connect to Proxmox host: %s", output)
         dispatch_alert(

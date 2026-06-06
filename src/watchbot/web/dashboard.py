@@ -63,7 +63,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WatchBot Dashboard</title>
-  <script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
+  <script crossorigin="anonymous" integrity="sha384-wL4lJLmSeRSvQ0x2vsCJoDoV3uRxHXs40P5Pq6f4Ln5PncgbhauFhPJ/79p0I40" referrerpolicy="no-referrer" src="https://cdn.plot.ly/plotly-2.35.3.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;

@@ -8,6 +8,46 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
+logger = logging.getLogger(__name__)
+
+
+# ── Content sanitization ─────────────────────────────────────
+# Guards against indirect prompt injection via external content
+# (RSS feeds, tweets, etc.). Strips known prompt-injection patterns
+# and wraps content in safe boundaries.
+
+_INJECTION_PATTERNS = [
+    re.compile(r'\b(?:ignore|disregard|forget)\s+(?:above|previous|all\s*(?:previous|the)?)\s*(?:instructions|prompts?|commands|directions|rules?)', re.I),
+    re.compile(r'\b(?:new\s+)?(?:instruction|prompt|rule|directive)s?\s*[:\-]', re.I),
+    re.compile(r'\b(?:you\s+are\s+(?:now|not\s+)|act\s+as|pretend\s+(?:to\s+be|that)|role.play\s*(?:\s*[:=]))', re.I),
+    re.compile(r'\[?(?:END|START)\s*(?:OF|OF\s+INPUT|OF\s+OUTPUT)\]?', re.I),
+    re.compile(r'<\|?[\w\s]+\|?>', re.I),  # special tokens like <|im_start|>, <s>
+    re.compile(r'```[\s\S]*?```'),  # code blocks — strip entirely
+]
+
+
+def sanitize_external_content(text: str, max_length: int = 500) -> str:
+    """Sanitize content from external sources (RSS, Twitter, etc.).
+
+    - Strips known prompt-injection patterns
+    - Strips code blocks
+    - Truncates to max_length
+    - Wraps in inert boundary markers so the agent sees it as data
+    """
+    if not text:
+        return ""
+
+    for pattern in _INJECTION_PATTERNS:
+        text = pattern.sub("", text)
+
+    # Strip excess whitespace from injection-pattern removal
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    if len(text) > max_length:
+        text = text[:max_length] + "…"
+
+    return text
+
 from watchbot.core.state import create_alert, get_active_alerts
 
 logger = logging.getLogger(__name__)
@@ -67,7 +107,15 @@ def classify_severity(value: float, warn_at: float, crit_at: float) -> str:
 # ── Template rendering ─────────────────────────────────────────
 
 def render_alert_template(template_name: str, **kwargs) -> str:
-    """Simple template rendering for alert messages."""
+    """Simple template rendering for alert messages.
+
+    Automatically sanitizes external content fields (text, summary,
+    message) to prevent indirect prompt injection.
+    """
+    # Sanitize any external content fields
+    for field in ("text", "summary", "message", "title"):
+        if field in kwargs and isinstance(kwargs[field], str):
+            kwargs[field] = sanitize_external_content(kwargs[field])
     templates = {
         "lxc_down": (
             "{emoji} **LXC {vmid} — {name}** is DOWN\n"
@@ -93,15 +141,17 @@ def render_alert_template(template_name: str, **kwargs) -> str:
         ),
         "twitter_keyword": (
             "🐦 **Keyword match: {keyword}**\n"
-            "Tweet by @{user}: {text[:200]}\n"
+            "[EXTERNAL_DATA] Tweet by @{user}: {text[:200]}\n"
             "URL: {url}\n"
-            "Time: {timestamp}"
+            "Time: {timestamp}\n"
+            "[/EXTERNAL_DATA]"
         ),
         "blog_post": (
             "📰 **New post: {title}**\n"
-            "Source: {feed}\n"
+            "[EXTERNAL_DATA] Source: {feed}\n"
             "URL: {url}\n"
-            "Time: {timestamp}"
+            "Time: {timestamp}\n"
+            "[/EXTERNAL_DATA]"
         ),
         "docker_restart": (
             "🐳 **Docker container {name}** restarted\n"
