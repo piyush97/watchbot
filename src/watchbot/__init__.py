@@ -264,11 +264,21 @@ def register(ctx):
 
     # ── Register bundled skill (plugin:watchbot) ────────────────
     plugin_dir = Path(__file__).resolve().parent
-    # Check both drop-in plugin layout and pip package layout
     for candidate in (
-        plugin_dir / "SKILL.md",                     # ~/.hermes/plugins/watchbot/SKILL.md
-        plugin_dir.parent.parent / "SKILL.md",       # pip src/ layout
+        plugin_dir / "SKILL.md",
+        plugin_dir.parent / "SKILL.md",
     ):
         if candidate.exists():
             ctx.register_skill("watchbot", candidate)
             break
+
+
+# Module-level registration for top-level CLI parser
+def register_cli(subparser) -> None:
+    """Register ``hermes watchbot`` at the top-level CLI.
+
+    Called by the Hermes CLI framework before session start,
+    enabling ``hermes watchbot status`` and similar commands
+    without entering a chat session.
+    """
+    _watchbot_cli_setup(subparser)
