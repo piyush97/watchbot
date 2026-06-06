@@ -1,11 +1,28 @@
 name: watchbot
 version: 0.1.0
-description: "Unified homelab + social media monitoring plugin — Proxmox LXC watchdog, Home Assistant sensor queries, X/Twitter timeline & keyword tracking, RSS/blog feed monitoring, system health (disk/CPU/memory), Docker container health. All monitors feed into a single dashboard with cron-driven alerts."
-author: "Piyush Mehta (@piyush97)"
+description: >
+  Unified homelab + social media monitoring — Proxmox LXC watchdog, Home
+  Assistant sensor queries, X/Twitter timeline & keyword tracking, RSS/blog
+  feed monitoring, system health (disk/CPU/memory), Docker container health.
+  All monitors feed into a single dashboard with cron-driven alerts.
+author: "Piyush Mehta"
+homepage: "https://github.com/piyush97/watchbot"
+repository:
+  type: git
+  url: "https://github.com/piyush97/watchbot.git"
 kind: standalone
 platforms:
   - linux
   - macos
+requires_env:
+  - name: HA_TOKEN
+    description: "Long-lived access token for Home Assistant API"
+    url: "http://192.168.0.244:8123/profile/security"
+    secret: true
+  - name: X_API_TOKEN
+    description: "X/Twitter API Bearer token for timeline & search"
+    url: "https://developer.x.com/en/portal"
+    secret: true
 provides_tools:
   - watchbot_status
   - watchbot_alert
