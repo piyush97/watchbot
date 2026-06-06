@@ -3,10 +3,18 @@
 > Unified homelab + social media monitoring plugin for [Hermes Agent](https://hermes-agent.nousresearch.com)
 
 [![Hermes Plugin](https://img.shields.io/badge/Hermes-Plugin-8B5CFE)](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins)
+[![skills.sh](https://skills.sh/b/piyush97/watchbot)](https://skills.sh/piyush97/watchbot)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/piyush97/watchbot)](https://github.com/piyush97/watchbot/stargazers)
 
 **WatchBot** combines Proxmox LXC watchdog, Home Assistant sensor queries, X/Twitter monitoring, RSS/blog feed tracking, system health, and Docker container monitoring into a single Hermes Agent plugin with agent tools, CLI commands, lifecycle hooks, and a live dashboard.
+
+```bash
+npx skills add piyush97/watchbot
+hermes plugins enable watchbot
+hermes watchbot status
+```
 
 ## Features
 
@@ -45,52 +53,33 @@ hermes watchbot setup         # Configuration wizard
 hermes watchbot dashboard     # Web UI at :9099
 ```
 
-## Installation
-
-### Option 1: Drop-in plugin (recommended)
-
-```bash
-cd ~/.hermes/plugins
-git clone https://github.com/piyush97/watchbot.git
-hermes plugins enable watchbot
-```
-
-### Option 2: Pip install
-
-```bash
-pip install git+https://github.com/piyush97/watchbot.git
-hermes plugins enable watchbot
-```
-
-### Verify
-
-```bash
-hermes plugins list
-# → ✓ watchbot v0.1.0 (4 tools, 2 hooks)
-
-hermes watchbot status
-```
-
 ## Quick Start
 
 ```bash
-# 1. Run setup wizard
+# Install via skills.sh (recommended)
+npx skills add piyush97/watchbot
+
+# Or clone directly
+cd ~/.hermes/plugins
+git clone https://github.com/piyush97/watchbot.git
+
+# Enable
+hermes plugins enable watchbot
+
+# Run setup wizard
 hermes watchbot setup
 
-# 2. Launch the dashboard
+# Check status
+hermes watchbot status
+
+# Launch dashboard
 hermes watchbot dashboard
 # → Open http://127.0.0.1:9099
-
-# 3. Check system health
-hermes watchbot health
-
-# 4. Full status
-hermes watchbot status --json
 ```
 
 ## Configuration
 
-Edit `~/.hermes/watchbot.yaml` (auto-generated on first use):
+Auto-generated at `~/.hermes/watchbot.yaml`:
 
 ```yaml
 watchbot:
@@ -112,24 +101,6 @@ watchbot:
     enabled: true
 ```
 
-## Agent Usage
-
-The LLM can call WatchBot tools autonomously during a session:
-
-```python
-# Check overall health
-status = tools.watchbot_status()
-print(f"Health: {status['health']}")
-
-# Query a specific monitor
-sys_data = tools.watchbot_query(monitor="system")
-print(f"CPU: {sys_data['cpu']['used_pct']}%")
-
-# Manage alerts
-tools.watchbot_alert(action="trigger", source="manual",
-    severity="warning", title="Disk check needed")
-```
-
 ## Architecture
 
 ```
@@ -145,6 +116,15 @@ tools.watchbot_alert(action="trigger", source="manual",
 └──────────────────────────────────────────────────────────────┘
 ```
 
+## Publishing Channels
+
+| Channel | Status | Link |
+|---------|--------|------|
+| skills.sh | ✅ Listed | [piyush97/watchbot](https://skills.sh/piyush97/watchbot) |
+| PyPI | ⏳ Planned | `pip install watchbot` |
+| Hermes optional-skills | ⏳ PR planned | PR to NousResearch/hermes-agent |
+| OpenClaw Hub | ⏳ Planned | `hermes skills tap add` |
+
 ## Requirements
 
 - Python 3.11+
@@ -158,8 +138,7 @@ tools.watchbot_alert(action="trigger", source="manual",
 
 - [Hermes Agent Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins/)
 - [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/guides-tutorials/build-a-plugin/)
-- [homelab-watchdog](https://github.com/NousResearch/hermes-agent/tree/main/optional-skills) — ancestor skill
-- [xurl](https://github.com/NousResearch/hermes-agent/tree/main/optional-skills) — X/Twitter skill
+- [skills.sh](https://skills.sh) — Agent skill marketplace
 
 ## License
 
