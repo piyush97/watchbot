@@ -128,3 +128,10 @@ watchbot:
 3. **Twitter requires xurl CLI** — Install and auth with `xurl` separately. Without it, the Twitter monitor returns empty.
 4. **Docker socket** — The plugin reads `/var/run/docker.sock`. If running Hermes in a container, mount the socket.
 5. **Feedparser optional** — For direct RSS parsing without blogwatcher-cli: `pip install feedparser`
+6. **CLI caveat** — Hermes top-level CLI doesn't auto-discover external plugin commands. Use `python3 -m watchbot <command>` or add this bash alias to `~/.bash_aliases`:
+   ```bash
+   hermes() {
+       if [ "$1" = "watchbot" ]; then shift; python3 -m watchbot "$@"
+       else command hermes "$@"; fi
+   }
+   ```
