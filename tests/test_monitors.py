@@ -2,13 +2,8 @@
 
 from __future__ import annotations
 
-import json
-import os
-import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 
-import pytest
 
 
 # ── Config tests ──────────────────────────────────────────────
@@ -25,7 +20,8 @@ class TestConfig:
     def test_merge_overrides(self):
         """User config should deep-merge with defaults."""
         from watchbot.core.config import load_config
-        import tempfile, yaml
+        import tempfile
+        import yaml
         overrides = {"watchbot": {"homelab": {"host": "10.0.0.1"}}}
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             yaml.dump(overrides, f)
@@ -57,7 +53,6 @@ class TestState:
         """Alerts should be creatable and retrievable."""
         from watchbot.core.state import (
             create_alert,
-            dismiss_alert,
             get_active_alerts,
             resolve_alert,
         )

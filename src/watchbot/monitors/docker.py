@@ -8,7 +8,6 @@ import logging
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from urllib.parse import urlencode
 
 from watchbot.core.alerts import dispatch_alert, render_alert_template
 from watchbot.core.config import get_monitor_config

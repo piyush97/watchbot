@@ -38,7 +38,10 @@ def _load_real_package():
     spec = importlib.util.spec_from_file_location(
         "watchbot_real",
         init_py,
-        submodule_search_locations=[str(_SRC_DIR)],
+        # The package lives at src/watchbot/, not src/ — pointing the search
+        # location at the package directory lets `watchbot.core` and friends
+        # resolve normally (a src/ location made submodule imports fail).
+        submodule_search_locations=[str(_SRC_DIR / "watchbot")],
     )
     if spec is None or spec.loader is None:
         raise ImportError(f"Failed to create spec for {init_py}")

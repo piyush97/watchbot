@@ -7,8 +7,12 @@
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB)](https://python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/piyush97/watchbot)](https://github.com/piyush97/watchbot/stargazers)
+[![CI](https://github.com/piyush97/watchbot/actions/workflows/ci.yml/badge.svg)](https://github.com/piyush97/watchbot/actions/workflows/ci.yml)
 
 **WatchBot** combines Proxmox LXC watchdog, Home Assistant sensor queries, X/Twitter monitoring, RSS/blog feed tracking, system health, and Docker container monitoring into a single Hermes Agent plugin with agent tools, CLI commands, lifecycle hooks, and a live dashboard.
+
+Want to help out? See [CONTRIBUTING.md](CONTRIBUTING.md) — bug reports, docs,
+tests, and code all welcome.
 
 ```bash
 npx skills add piyush97/watchbot
@@ -163,6 +167,11 @@ credential boundaries, and a WatchBot plus TweetClaw workflow.
 - [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/guides/build-a-hermes-plugin/)
 - [Hermes Tweet](https://github.com/Xquik-dev/hermes-tweet)
 - [skills.sh](https://skills.sh) — Agent skill marketplace
+
+## Contributing
+
+Community contributions are welcome — bug reports, docs, tests, and code. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for setup, testing, and PR guidance.
 
 ## License
 

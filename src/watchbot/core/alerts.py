@@ -6,7 +6,7 @@ import logging
 import re
 import time
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple
+from typing import Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ def sanitize_external_content(text: str, max_length: int = 500) -> str:
 
     return text
 
-from watchbot.core.state import create_alert, get_active_alerts
+from watchbot.core.state import create_alert, get_active_alerts  # noqa: E402  (circular-import guard)
 
 logger = logging.getLogger(__name__)
 
