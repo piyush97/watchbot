@@ -101,6 +101,17 @@ watchbot:
     enabled: true
 ```
 
+## Optional Hermes Tweet Companion
+
+WatchBot's built-in X/Twitter monitor uses `xurl` for timeline and keyword status checks. When an agent needs a Hermes plugin-native route for X/Twitter search, read-only research, or draft preparation outside the WatchBot dashboard, pair it with [Hermes Tweet](https://github.com/Xquik-dev/hermes-tweet):
+
+```bash
+hermes plugins install Xquik-dev/hermes-tweet --enable
+export XQUIK_API_KEY="YOUR_XQUIK_API_KEY"
+```
+
+Keep WatchBot responsible for monitoring status and alerts. Use Hermes Tweet for on-demand X/Twitter search and read workflows, and only enable `HERMES_TWEET_ENABLE_ACTIONS=true` after explicit user approval for public or account-changing actions.
+
 ## Architecture
 
 ```
@@ -132,6 +143,7 @@ watchbot:
 - SSH key access to Proxmox host (for homelab monitor)
 - HA_TOKEN env var (for Home Assistant)
 - xurl CLI (for X/Twitter, optional)
+- Hermes Tweet (optional companion for plugin-native X/Twitter research)
 - Docker socket at `/var/run/docker.sock` (for Docker, optional)
 
 ## X/Twitter Source Options
@@ -149,6 +161,7 @@ credential boundaries, and a WatchBot plus TweetClaw workflow.
 
 - [Hermes Agent Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins/)
 - [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/guides/build-a-hermes-plugin/)
+- [Hermes Tweet](https://github.com/Xquik-dev/hermes-tweet)
 - [skills.sh](https://skills.sh) — Agent skill marketplace
 
 ## License

@@ -6,7 +6,7 @@ author: Piyush Mehta (@piyush97)
 metadata:
   hermes:
     tags: [monitoring, homelab, proxmox, home-assistant, docker, twitter, rss, system-health, dashboard]
-    related_skills: [homelab-watchdog, xurl, blogwatcher]
+    related_skills: [homelab-watchdog, xurl, blogwatcher, hermes-tweet]
 ---
 
 # WatchBot 👁️
@@ -105,6 +105,17 @@ watchbot:
   docker:
     enabled: true
 ```
+
+## Optional Hermes Tweet Companion
+
+WatchBot uses `xurl` for its built-in X/Twitter monitor. Use the Hermes Tweet plugin alongside WatchBot when the task needs plugin-native X/Twitter search, read-only research, or draft preparation beyond the status dashboard.
+
+```bash
+hermes plugins install Xquik-dev/hermes-tweet --enable
+export XQUIK_API_KEY="YOUR_XQUIK_API_KEY"
+```
+
+Keep WatchBot focused on monitoring status and alerts. Only enable `HERMES_TWEET_ENABLE_ACTIONS=true` when the user explicitly approves a public or account-changing action.
 
 ## Architecture
 
