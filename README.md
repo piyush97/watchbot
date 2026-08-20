@@ -134,10 +134,21 @@ watchbot:
 - xurl CLI (for X/Twitter, optional)
 - Docker socket at `/var/run/docker.sock` (for Docker, optional)
 
+## X/Twitter Source Options
+
+WatchBot's built-in X/Twitter monitor uses `xurl` for timeline and keyword
+snapshots inside Hermes. OpenClaw users who need deeper X/Twitter workflows can
+run TweetClaw beside WatchBot for structured tweet search, search tweet replies,
+follower export, explicit monitors, webhooks, media workflows, giveaway draws,
+and approval-gated posting.
+
+See [X/Twitter Source Options](docs/x-twitter-source-options.md) for setup,
+credential boundaries, and a WatchBot plus TweetClaw workflow.
+
 ## Related
 
 - [Hermes Agent Plugins](https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins/)
-- [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/guides-tutorials/build-a-plugin/)
+- [Build a Hermes Plugin](https://hermes-agent.nousresearch.com/docs/guides/build-a-hermes-plugin/)
 - [skills.sh](https://skills.sh) — Agent skill marketplace
 
 ## License
