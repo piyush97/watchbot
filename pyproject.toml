@@ -24,5 +24,18 @@ all = ["watchbot[dashboard,twitter]"]
 line-length = 100
 target-version = "py311"
 
+[tool.ruff.lint]
+# Safety-critical rules only (pyflakes F, import/statement/syntax E4/E7/E9).
+# This keeps `ruff check` green on any ruff version — newer ruff defaults
+# enable modernization rules (UP, BLE, I001, ...) that this codebase predates.
+select = ["E4", "E7", "E9", "F"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Tests import `watchbot.*` from src/. `pythonpath` puts src/ on sys.path so
+# those imports resolve. `--import-mode=importlib` (via addopts — pytest only
+# exposes it as a CLI flag) avoids pytest re-deriving tests as `watchbot.tests`,
+# which collides with the root plugin bridge and broke collection with
+# "No module named 'watchbot.tests'".
+pythonpath = ["src"]
+addopts = "--import-mode=importlib"

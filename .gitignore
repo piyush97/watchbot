@@ -9,6 +9,8 @@ build/
 .env
 .env.local
 *.log
+.venv/
+.venv*/
 
 # OS
 .DS_Store

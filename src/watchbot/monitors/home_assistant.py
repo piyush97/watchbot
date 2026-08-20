@@ -10,7 +10,6 @@ import urllib.error
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from watchbot.core.alerts import dispatch_alert, render_alert_template
 from watchbot.core.config import get_monitor_config
 from watchbot.core.state import save_snapshot
 

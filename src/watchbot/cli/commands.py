@@ -6,7 +6,6 @@ import argparse
 import json
 import logging
 import os
-import sys
 from typing import Any, Dict
 
 from watchbot.core.config import load_config
@@ -131,14 +130,14 @@ def _print_ha(data: Dict[str, Any]) -> None:
 
 
 def _print_twitter(data: Dict[str, Any]) -> None:
-    print(f"\n── X/Twitter ──\n")
+    print("\n── X/Twitter ──\n")
     print(f"  Enabled: {data.get('enabled', False)}")
     print(f"  Timeline tweets: {data.get('timeline_tweets', 0)}")
     print(f"  Keyword matches: {data.get('keyword_matches', 0)}")
 
 
 def _print_blogs(data: Dict[str, Any]) -> None:
-    print(f"\n── Blog/RSS Feeds ──\n")
+    print("\n── Blog/RSS Feeds ──\n")
     print(f"  Enabled: {data.get('enabled', True)}")
     print(f"  New posts: {data.get('new_posts', 0)}")
     for post in data.get("latest_posts", []):
@@ -172,7 +171,7 @@ def _run_setup(cfg: Dict) -> None:
     print(f"  [1/4] Proxmox host: {host}")
     print(f"        SSH key: {os.path.expanduser(key)}")
     if os.path.exists(os.path.expanduser(key)):
-        print(f"        ✅ SSH key found")
+        print("        ✅ SSH key found")
     else:
         print(f"        ❌ SSH key not found at {key}")
 

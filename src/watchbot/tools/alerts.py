@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 from watchbot.core.alerts import build_alert_summary, dispatch_alert
 from watchbot.core.state import dismiss_alert, get_active_alerts, resolve_alert

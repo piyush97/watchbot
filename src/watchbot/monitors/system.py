@@ -15,7 +15,7 @@ from watchbot.core.alerts import (
     render_alert_template,
 )
 from watchbot.core.config import get_monitor_config
-from watchbot.core.state import get_state, save_snapshot, set_state
+from watchbot.core.state import save_snapshot
 
 logger = logging.getLogger(__name__)
 
