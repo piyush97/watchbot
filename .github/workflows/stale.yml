@@ -1,0 +1,31 @@
+# Stale issue/PR hygiene — https://github.com/actions/stale
+name: Stale
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Every Monday 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    name: Mark stale issues and PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark stale issues and PRs
+        uses: actions/stale@v11
+        with:
+          # Issues: comment + label after 60 days, never auto-close.
+          days-before-issue-stale: 60
+          days-before-issue-close: -1
+          stale-issue-label: "stale"
+          # PRs: comment + label after 30 days, never auto-close.
+          days-before-pr-stale: 30
+          days-before-pr-close: -1
+          stale-pr-label: "stale"
+          # Dependabot PRs are exempt — they are the dependency-update channel
+          # and should never be nagged as stale.
+          exempt-pr-labels: "dependencies"
