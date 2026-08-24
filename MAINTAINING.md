@@ -70,6 +70,7 @@ hermes watchbot ha         # Home Assistant sensors
 hermes watchbot twitter    # X/Twitter timeline
 hermes watchbot blogs      # RSS feed latest
 hermes watchbot docker     # Docker container status
+hermes watchbot healthchecks  # Healthchecks.io cron-ping status
 hermes watchbot alerts     # Active alerts
 hermes watchbot dashboard  # Web UI at :9099
 ```

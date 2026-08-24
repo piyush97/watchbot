@@ -7,6 +7,7 @@ from typing import Any, Dict
 from watchbot.monitors import (
     blogwatcher,
     docker,
+    healthchecks,
     homelab,
     home_assistant,
     system,
@@ -46,6 +47,13 @@ def get_dashboard_data(cfg: Dict) -> Dict[str, Any]:
         dashboard["monitors"]["docker"] = docker.get_docker_summary(cfg)
     except Exception as e:
         dashboard["monitors"]["docker"] = {"error": str(e)}
+
+    # Healthchecks.io
+    if cfg.get("healthchecks", {}).get("enabled", False):
+        try:
+            dashboard["monitors"]["healthchecks"] = healthchecks.get_healthchecks_summary(cfg)
+        except Exception as e:
+            dashboard["monitors"]["healthchecks"] = {"error": str(e)}
 
     # X/Twitter
     if cfg.get("twitter", {}).get("enabled", False):

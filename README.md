@@ -32,6 +32,7 @@ hermes watchbot status
 | **Blogs/RSS** | New posts from feeds | RSS/Atom |
 | **System** | Disk, CPU, memory, temperature | /proc |
 | **Docker** | Container health, restart counts | Unix socket |
+| **Healthchecks.io** | Cron/ping deadlines, missed pings, grace | HTTP API |
 
 ### 4 Agent Tools
 
@@ -42,7 +43,7 @@ hermes watchbot status
 | `watchbot_alert` | Alert management (list/ack/resolve/trigger) |
 | `watchbot_dashboard` | Dashboard-ready aggregated data |
 
-### 11 CLI Commands
+### 12 CLI Commands
 
 ```bash
 hermes watchbot status        # Full status (also: --json)
@@ -52,6 +53,7 @@ hermes watchbot ha            # Home Assistant sensors
 hermes watchbot twitter       # X/Twitter timeline
 hermes watchbot blogs         # RSS feed latest
 hermes watchbot docker        # Docker container status
+hermes watchbot healthchecks  # Healthchecks.io cron-ping status
 hermes watchbot alerts        # Active alerts
 hermes watchbot setup         # Configuration wizard
 hermes watchbot dashboard     # Web UI at :9099
@@ -103,6 +105,10 @@ watchbot:
     disk_threshold_pct: 85
   docker:
     enabled: true
+  healthchecks:
+    enabled: false
+    api_base: https://healthchecks.io
+    api_key_env: HEALTHCHECKS_API_KEY
 ```
 
 ## Optional Hermes Tweet Companion
