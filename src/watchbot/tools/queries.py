@@ -8,6 +8,7 @@ from watchbot.core.config import load_config
 from watchbot.monitors import (
     blogwatcher,
     docker,
+    healthchecks,
     homelab,
     home_assistant,
     system,
@@ -33,6 +34,7 @@ def query_monitor_tool(monitor: str, action: str = "summary",
         "blogs": lambda: blogwatcher.get_blog_summary(cfg),
         "system": lambda: system.get_system_summary(cfg),
         "docker": lambda: docker.get_docker_summary(cfg),
+        "healthchecks": lambda: healthchecks.get_healthchecks_summary(cfg),
     }
 
     handler = handlers.get(monitor)

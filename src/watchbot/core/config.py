@@ -60,6 +60,12 @@ WATCHER_DEFAULTS: Dict[str, Any] = {
         "socket": "/var/run/docker.sock",
         "check_interval_seconds": 300,
     },
+    "healthchecks": {
+        "enabled": False,
+        "api_base": "https://healthchecks.io",
+        "api_key_env": "HEALTHCHECKS_API_KEY",
+        "check_interval_seconds": 300,
+    },
     "alerts": {
         "telegram": {
             "enabled": True,

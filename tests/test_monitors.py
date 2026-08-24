@@ -121,3 +121,51 @@ class TestAlerts:
         summary = build_alert_summary()
         assert isinstance(summary, str)
         assert len(summary) > 0
+
+
+# ── Healthchecks.io monitor tests ──────────────────────────────
+
+class TestHealthchecks:
+    def test_parse_status_mapping(self):
+        """API status strings must map to health/severity/label."""
+        from watchbot.monitors.healthchecks import parse_status
+        assert parse_status("up") == ("ok", "info", "up")
+        assert parse_status("grace") == ("warning", "warning", "late")
+        assert parse_status("down") == ("critical", "critical", "down")
+        assert parse_status("new") == ("warning", "warning", "never pinged")
+        assert parse_status("paused") == ("paused", "info", "paused")
+        assert parse_status("unknown") == ("unknown", "info", "unknown")
+
+    def test_evaluate_check_alert_on_late(self):
+        """A grace (late) check must produce a warning alert payload."""
+        from watchbot.monitors.healthchecks import evaluate_check
+        check = {
+            "name": "Backup", "slug": "backup", "status": "grace",
+            "last_ping": "2026-08-24T01:00:00+00:00",
+            "next_ping": "2026-08-24T02:00:00+00:00",
+        }
+        alert = evaluate_check(check)
+        assert alert is not None
+        assert alert["severity"] == "warning"
+        assert "Backup" in alert["title"]
+        assert "late" in alert["title"]
+
+    def test_evaluate_check_alert_on_down(self):
+        """A down check (grace expired = missed deadline) must be critical."""
+        from watchbot.monitors.healthchecks import evaluate_check
+        check = {
+            "name": "Backup", "slug": "backup", "status": "down",
+            "last_ping": "2026-08-24T01:00:00+00:00",
+            "next_ping": None,
+        }
+        alert = evaluate_check(check)
+        assert alert is not None
+        assert alert["severity"] == "critical"
+        assert "down" in alert["title"]
+
+    def test_evaluate_check_no_alert_when_healthy(self):
+        """up/new/paused checks must not produce an alert."""
+        from watchbot.monitors.healthchecks import evaluate_check
+        for status in ("up", "new", "paused"):
+            check = {"name": f"c-{status}", "status": status}
+            assert evaluate_check(check) is None, f"{status} should not alert"

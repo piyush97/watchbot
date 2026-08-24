@@ -13,6 +13,7 @@ from watchbot.core.state import get_active_alerts
 from watchbot.monitors import (
     blogwatcher,
     docker,
+    healthchecks,
     homelab,
     home_assistant,
     system,
@@ -38,6 +39,7 @@ def register_cli(subparser: argparse.ArgumentParser) -> None:
     subs.add_parser("twitter", help="X/Twitter timeline and keyword matches")
     subs.add_parser("blogs", help="Blog/RSS feed latest posts")
     subs.add_parser("docker", help="Docker container status")
+    subs.add_parser("healthchecks", help="Healthchecks.io cron-ping status")
     subs.add_parser("alerts", help="Active alerts")
     subs.add_parser("dashboard", help="Start the dashboard web server")
     subs.add_parser("setup", help="Initial setup wizard")
@@ -64,6 +66,7 @@ def run_command(args: argparse.Namespace) -> int:
         "twitter": lambda: _print_twitter(x_twitter.get_twitter_summary(cfg)),
         "blogs": lambda: _print_blogs(blogwatcher.get_blog_summary(cfg)),
         "docker": lambda: _print_docker(docker.get_docker_summary(cfg)),
+        "healthchecks": lambda: _print_healthchecks(healthchecks.get_healthchecks_summary(cfg)),
         "alerts": lambda: _print_alerts(get_active_alerts()),
         "setup": lambda: _run_setup(cfg),
         "dashboard": lambda: _run_dashboard(cfg),
@@ -158,6 +161,13 @@ def _print_docker(data: Dict[str, Any]) -> None:
 def _print_alerts(alerts: list) -> None:
     from watchbot.core.alerts import build_alert_summary
     print(f"\n{build_alert_summary()}\n")
+
+
+def _print_healthchecks(data: Dict[str, Any]) -> None:
+    print(f"\n── Healthchecks.io ({data.get('total', 0)} checks) ──\n")
+    for c in data.get("checks", []):
+        icon = {"ok": "✅", "warning": "⚠️", "critical": "❌"}.get(c.get("health"), "❔")
+        print(f"  {icon}  {c.get('name', '?'):30s} {c.get('label', c.get('status', '?'))}")
 
 
 def _run_setup(cfg: Dict) -> None:

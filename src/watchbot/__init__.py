@@ -85,7 +85,7 @@ WATCHBOT_QUERY_SCHEMA: Dict[str, Any] = {
     "name": "watchbot_query",
     "description": (
         "Query a specific WatchBot monitor for detailed data. "
-        "Monitors: homelab, home_assistant, twitter, blogs, system, docker."
+        "Monitors: homelab, home_assistant, twitter, blogs, system, docker, healthchecks."
     ),
     "parameters": {
         "type": "object",
@@ -94,7 +94,7 @@ WATCHBOT_QUERY_SCHEMA: Dict[str, Any] = {
                 "type": "string",
                 "enum": [
                     "homelab", "home_assistant", "twitter",
-                    "blogs", "system", "docker",
+                    "blogs", "system", "docker", "healthchecks",
                 ],
                 "description": "Monitor to query",
             },

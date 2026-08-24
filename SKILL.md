@@ -19,6 +19,7 @@ Trigger when the user:
 - Wants to check overall system/home/social health
 - Asks "what's the status of my homelab?"
 - Wants docker container status
+- Wants to see cron/ping deadline health (Healthchecks.io)
 - Wants current temperature from Home Assistant
 - Wants the latest X/Twitter mentions or timeline
 - Wants RSS/blog updates
@@ -67,6 +68,7 @@ hermes watchbot ha            # Home Assistant sensors
 hermes watchbot twitter       # X/Twitter timeline + keyword matches
 hermes watchbot blogs         # New RSS/blog posts
 hermes watchbot docker        # Docker containers
+hermes watchbot healthchecks  # Healthchecks.io cron-ping status
 hermes watchbot alerts        # Active alerts
 hermes watchbot setup         # Initial configuration wizard
 hermes watchbot status --json # Machine-readable JSON output
@@ -104,6 +106,10 @@ watchbot:
     disk_threshold_pct: 85
   docker:
     enabled: true
+  healthchecks:
+    enabled: false
+    api_base: https://healthchecks.io
+    api_key_env: HEALTHCHECKS_API_KEY
 ```
 
 ## Optional Hermes Tweet Companion
